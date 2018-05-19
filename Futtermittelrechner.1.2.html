@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+
+	<head>
+		<title>Futtermittelrechner</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+		<script>
+
+			var Kuh = function(name, ohrmarke, milch, traechtig, futteranzahl) {
+				this.daten = [];
+				this.futtermenge = [];
+
+				this.daten[0] = name;
+				this.daten[1] = ohrmarke;
+				this.daten[2] = milch;
+				this.daten[3] = traechtig;
+
+				for(i = 0; i < futteranzahl; i++)
+					this.futtermenge[i] = 0;
+			}
+
+			var Futtermittel = function(name, energie, fett, eiweis, rohfaser) {
+				this.name = name;
+				this.energie = energie;
+				this.fett = fett;
+				this.eiweis = eiweis;
+				this.rohfaser = rohfaser;
+			}
+
+			$(document).ready(function() {
+
+				var futtermittelliste = [];
+				var kuhliste = [];
+
+    			$.ajax({
+        			type: "GET",
+        			url: "Kuhliste.csv",
+        			dataType: "text",
+        			success: function(data) {
+
+						// Futtermittelliste erstellen (im Moment hardcoded, kann man bei Bedarf auch aus File laden)
+						futtermittelliste[0] = new Futtermittel('Gras',10,0,0,0);
+						futtermittelliste[1] = new Futtermittel('Heu',0,10,0,0);
+						futtermittelliste[2] = new Futtermittel('Rüben',0,0,10,0);
+						futtermittelliste[3] = new Futtermittel('Mais',0,0,0,20);
+
+        				// Kuhliste aus csv file laden
+        				var zeilen = data.split(/\r\n|\n/);
+        				var daten_zeile;
+    					for (var i = 0; i < zeilen.length - 1; i++) {
+        					daten_zeile = zeilen[i+1].split(';');
+        					kuhliste[i] = new Kuh(daten_zeile[0],daten_zeile[1],daten_zeile[2],daten_zeile[3],futtermittelliste.length);
+    					}
+
+    					var index_vorherige_kuh = 0;
+
+						// Anzeige der Kühe erstellen
+						$('<select class="form-control" id="auswahl_kuh">').appendTo('#anzeige_kuh');
+
+						for (i = 0; i < kuhliste.length; i++)
+							($('<option>').val(kuhliste[i].daten[1]).html(kuhliste[i].daten[0]).appendTo('#auswahl_kuh'));
+
+						$('<div id="ohrmarke_aktuell">').html(kuhliste[0].daten[1]).appendTo('#anzeige_ohrmarke');
+						$('<div id="milch_aktuell">').html(kuhliste[0].daten[2] + ' l pro Tag').appendTo('#anzeige_milch');
+						$('<div id="traechtig_aktuell">').html(kuhliste[0].daten[3]).appendTo('#anzeige_traechtig');
+
+						// Anzeige der Futtermittel erstellen
+						for(i = 0; i < futtermittelliste.length; i++) {
+
+							$('<tr id="tab_zeile' + i.toString() + '">').appendTo('#futterdaten');
+							$('<td id="anzeige_menge' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_futtermittel' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_energie' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_fett' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_eiweis' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_rohfaser' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+
+							$('<select id="auswahl_menge' + i.toString() + '">').appendTo('#anzeige_menge' + i.toString());
+
+							for (j=0; j<=100; j++)
+								($('<option>').val(0.5*j).html(0.5*j).appendTo('#auswahl_menge' + i.toString()));
+
+							$('<div>').html(futtermittelliste[i].name).appendTo('#anzeige_futtermittel' + i.toString());
+							$('<div>').html(futtermittelliste[i].energie).appendTo('#anzeige_energie' + i.toString());
+							$('<div>').html(futtermittelliste[i].fett).appendTo('#anzeige_fett' + i.toString());
+							$('<div>').html(futtermittelliste[i].eiweis).appendTo('#anzeige_eiweis' + i.toString());
+							$('<div>').html(futtermittelliste[i].rohfaser).appendTo('#anzeige_rohfaser' + i.toString());
+						}
+
+						// Event handle für Kuhauswahl
+						$('#auswahl_kuh').on('change', function() {
+
+							om = $('#auswahl_kuh').val();
+							var index;
+
+							for (i=0; i<kuhliste.length; i++) {
+								if(kuhliste[i].daten[1] == om)
+									index = i;
+							}
+
+							$('#ohrmarke_aktuell,#milch_aktuell,#traechtig_aktuell').remove();
+							$('<div id="ohrmarke_aktuell">').html(kuhliste[index].daten[1]).appendTo('#anzeige_ohrmarke');
+							$('<div id="milch_aktuell">').html(kuhliste[index].daten[2] + ' l pro Tag').appendTo('#anzeige_milch');
+							$('<div id="traechtig_aktuell">').html(kuhliste[index].daten[3]).appendTo('#anzeige_traechtig');
+
+							// ausgewählte futtermenge für vorherige kuh abspeichern
+							for(i = 0; i < futtermittelliste.length; i++) {
+
+								menge = $('#auswahl_menge' + i.toString()).val();
+								kuhliste[index_vorherige_kuh].futtermenge[i] = menge;
+							}
+
+							// alte Auswahl laden
+							for(i = 0; i < futtermittelliste.length; i++) {
+								$('#auswahl_menge' + i.toString()).val(kuhliste[index].futtermenge[i]).change;
+							}
+
+							// index für nächste Änderung speichern
+							index_vorherige_kuh = index;
+						});
+
+						$('button').on('click', function() {
+							event.preventDefault();
+							// TODO: benötigte Gesamtmenge aus den ausgewählten Daten berechnen
+						});
+        			}
+     			});
+
+			});
+
+		</script>
+
+		<style>
+			#wrapper{ margin: 0.8em;}
+			* { font:1.25 rem Arial; }
+			#formular {
+				border: 3px solid #000;
+				width:80%;
+				position: static;
+				padding: 0.8em;
+				margin-bottom: 0.8em;
+			}
+			table { width: 620px; height: 100px}
+			td { width: 200px; height:50px}
+			#datkuh {width: 200px; height:50px}
+			.inputfm {width: 120px;}
+		</style>
+
+	</head>
+
+	<body>
+		<div id="wrapper">
+		<h2>Futtermittelrechner</h2>
+
+		<form id="formular">
+
+			<table id="kuhdaten">
+				<tr>
+					<td>Name</td><td>Ohrmarke</td><td>Milch</td><td>trächtig</td>
+				</tr>
+				<tr>
+					<td id="anzeige_kuh"></td><td id="anzeige_ohrmarke"></td><td id="anzeige_milch"></td><td id="anzeige_traechtig"></td>
+				</tr>
+			</table>
+
+			<table class="table-bordered" id="futterdaten">
+				<tr>
+					<td>Menge (kg)</td><td>Futtermittel</td><td>Energie (kJ)</td><td>Fett (g)</td><td>Eiweiß (g)</td><td>Rohfaser (g)</td>
+				</tr>
+			</table>
+
+			<div id="berechnung"></div>
+		</form>
+
+		<button type="button" class="btn btn-primary">Gesamte Futtermenge berechnen</button>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+	</div>
+	</body>
+
+</html>
