@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+
+	<head>
+		<title>Futtermittelrechner</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+		<script src="RGraph/libraries/RGraph.common.core.js"></script>
+		<script src="RGraph/libraries/RGraph.drawing.text.js"></script>
+		<script src="RGraph/libraries/RGraph.pie.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+		<script>
+
+			var Kuh = function(name, ohrmarke, milch, traechtig, futteranzahl) {
+				this.daten = [];
+				this.futtermenge = [];
+
+				this.daten[0] = name;
+				this.daten[1] = ohrmarke;
+				this.daten[2] = milch;
+				this.daten[3] = traechtig;
+
+				for(i = 0; i < futteranzahl; i++)
+					this.futtermenge[i] = 0;
+			}
+
+			var Futtermittel = function(name, energie, fett, eiweis, rohfaser) {
+				this.name = name;
+				this.energie = energie;
+				this.fett = fett;
+				this.eiweis = eiweis;
+				this.rohfaser = rohfaser;
+			}
+
+			var futtermittelliste = [];
+			var kuhliste = [];
+
+
+			  // Ende Canvas Energie
+
+
+
+
+
+			var felder_aktualisieren = function() {
+
+				var neuer_wert_energie;
+				var neuer_wert_fett;
+				var neuer_wert_eiweis;
+				var neuer_wert_rohfaser;
+
+				for(var i = 0; i < futtermittelliste.length; i++) {
+
+					menge = $('#auswahl_menge' + i.toString()).val();
+
+					neuer_wert_energie = menge * futtermittelliste[i].energie;
+					neuer_wert_fett = menge * futtermittelliste[i].fett;
+					neuer_wert_eiweis = menge * futtermittelliste[i].eiweis;
+					neuer_wert_rohfaser = menge * futtermittelliste[i].rohfaser;
+
+					$('#anzeige_energie' + i.toString()).html(neuer_wert_energie).change;
+					$('#anzeige_fett' + i.toString()).html(neuer_wert_fett).change;
+					$('#anzeige_eiweis' + i.toString()).html(neuer_wert_eiweis).change;
+					$('#anzeige_rohfaser' + i.toString()).html(neuer_wert_rohfaser).change;
+
+					// Gesamtmenge aktualisieren
+
+					var sum_energie = 0;
+					var sum_fett = 0;
+					var sum_eiweis = 0;
+					var sum_rohfaser = 0;
+
+					for(var j = 0; j < futtermittelliste.length; j++) {
+
+						var wert_energie_string = $('#anzeige_energie' + j.toString()).html();
+						var wert_energie = wert_energie_string * 1;
+
+						var wert_fett_string = $('#anzeige_fett' + j.toString()).html();
+						var wert_fett = wert_fett_string * 1;
+
+						var wert_eiweis_string = $('#anzeige_eiweis' + j.toString()).html();
+						var wert_eiweis = wert_eiweis_string * 1;
+
+						var wert_rohfaser_string = $('#anzeige_rohfaser' + j.toString()).html();
+						var wert_rohfaser = wert_rohfaser_string * 1;
+
+						sum_energie = sum_energie + wert_energie;
+						sum_fett = sum_fett + wert_fett;
+						sum_eiweis = sum_eiweis + wert_eiweis;
+						sum_rohfaser = sum_rohfaser + wert_rohfaser;
+					}
+
+					$('#sum_energie').html(sum_energie).change;
+					$('#sum_fett').html(sum_fett).change;
+					$('#sum_eiweis').html(sum_eiweis).change;
+					$('#sum_rohfaser').html(sum_rohfaser).change;
+
+				}
+
+				var ratio_energie = ((($('#sum_energie').html())*1) / (($('#bedEn').html())*1))*100;
+				//var ratio_fett = ((($('#sum_fett').html())*1) / (($('#bedFe').html())*1))*100;
+				var ratio_eiweis = ((($('#sum_eiweis').html())*1) / (($('#bedEiw').html())*1))*100;
+				//var ratio_rohfaser = ((($('#sum_rohfaser').html())*1) / (($('#bedRo').html())*1))*100;
+
+				//alert(ratio_energie);
+				//alert(ratio_eiweis);
+
+				//RGraph.Clear(document.getElementsByTagName('canvas'));
+			//	cvs.clearRect(0,0,150,150);
+				//zeichneCanvasEnergie(5);
+
+
+				//ctx.clearRect(0,0,canvasWidth,canvasHeight);
+			}
+
+			$(document).ready(function() {
+
+
+
+    			$.ajax({
+        			type: "GET",
+        			url: "Kuhliste.csv",
+        			dataType: "text",
+        			success: function(data) {
+
+						// Futtermittelliste erstellen (im Moment hardcoded, kann man bei Bedarf auch aus File laden)
+						futtermittelliste[0] = new Futtermittel('Gras',10,5,8,13);
+						futtermittelliste[1] = new Futtermittel('Heu',8,15,9,3);
+						futtermittelliste[2] = new Futtermittel('Rüben',13,2,12,8);
+						futtermittelliste[3] = new Futtermittel('Mais',4,17,11,10);
+						futtermittelliste[4] = new Futtermittel('Getreide',19,12,1,5);
+
+        				// Kuhliste aus csv file laden
+        				var zeilen = data.split(/\r\n|\n/);
+        				var daten_zeile;
+    					for (var i = 0; i < zeilen.length - 1; i++) {
+        					daten_zeile = zeilen[i+1].split(';');
+        					kuhliste[i] = new Kuh(daten_zeile[0],daten_zeile[1],daten_zeile[2],daten_zeile[3],futtermittelliste.length);
+    					}
+
+    					var index_vorherige_kuh = 0;
+
+						// Anzeige der Kühe erstellen
+						$('<select class="form-control" id="auswahl_kuh">').appendTo('#anzeige_kuh');
+
+						for (i = 0; i < kuhliste.length; i++)
+							($('<option>').val(kuhliste[i].daten[1]).html(kuhliste[i].daten[0]).appendTo('#auswahl_kuh'));
+
+						$('<div id="ohrmarke_aktuell">').html(kuhliste[0].daten[1]).appendTo('#anzeige_ohrmarke');
+						$('<div id="milch_aktuell">').html(kuhliste[0].daten[2]).appendTo('#anzeige_milch');
+						$('<div id="traechtig_aktuell">').html(kuhliste[0].daten[3]).appendTo('#anzeige_traechtig');
+
+						var formelbedEn = Math.round(($('#milch_aktuell').html() * 3.3 + 40)*10)/10	;
+						var formelbedEiw = Math.round(($('#milch_aktuell').html() * 8.8 + 89)*10)/10;
+
+						$('#bedEn').html( formelbedEn );
+						$('#bedEiw').html( formelbedEiw );
+
+						// Anzeige der Futtermittel erstellen
+						for(i = 0; i < futtermittelliste.length; i++) {
+
+							$('<tr id="tab_zeile' + i.toString() + '">').appendTo('#futterdaten');
+							$('<td id="anzeige_menge' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_futtermittel' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_energie' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_fett' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_eiweis' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+							$('<td id="anzeige_rohfaser' + i.toString() + '">').appendTo('#tab_zeile' + i.toString());
+
+							$('<select class="form-control" id="auswahl_menge' + i.toString() + '">').appendTo('#anzeige_menge' + i.toString());
+
+							for (j=0; j<=100; j++)
+								($('<option>').val(0.5*j).html(0.5*j).appendTo('#auswahl_menge' + i.toString()));
+
+
+							$('<div>').html(futtermittelliste[i].name).appendTo('#anzeige_futtermittel' + i.toString());
+
+							$('<div>').html('0').appendTo('#anzeige_energie' + i.toString());
+							$('<div>').html('0').appendTo('#anzeige_fett' + i.toString());
+							$('<div>').html('0').appendTo('#anzeige_eiweis' + i.toString());
+							$('<div>').html('0').appendTo('#anzeige_rohfaser' + i.toString());
+						}
+
+
+						$('<tr id="tab_erg">').appendTo('#futterdaten');
+						$('<td>').appendTo('#tab_erg');
+						$('<td id="sum_ges">').html('Gesamt').appendTo('#tab_erg');
+						$('<td id="sum_energie">').html(0).appendTo('#tab_erg');
+						$('<td id="sum_fett">').html(0).appendTo('#tab_erg');
+						$('<td id="sum_eiweis">').html(0).appendTo('#tab_erg');
+						$('<td id="sum_rohfaser">').html(0).appendTo('#tab_erg');
+
+			//			zeichneCanvasEnergie(0);
+
+						// Event handle für Kuhauswahl
+						$('#auswahl_kuh').on('change', function() {
+
+							om = $('#auswahl_kuh').val();
+							var index;
+
+							for (i=0; i<kuhliste.length; i++) {
+								if(kuhliste[i].daten[1] == om)
+									index = i;
+							}
+
+							$('#ohrmarke_aktuell,#milch_aktuell,#traechtig_aktuell').remove();
+							$('<div id="ohrmarke_aktuell">').html(kuhliste[index].daten[1]).appendTo('#anzeige_ohrmarke');
+							$('<div id="milch_aktuell">').html(kuhliste[index].daten[2]).appendTo('#anzeige_milch');
+							$('<div id="traechtig_aktuell">').html(kuhliste[index].daten[3]).appendTo('#anzeige_traechtig');
+
+							// ausgewählte futtermenge für vorherige kuh abspeichern
+							for(i = 0; i < futtermittelliste.length; i++) {
+
+								menge = $('#auswahl_menge' + i.toString()).val();
+								kuhliste[index_vorherige_kuh].futtermenge[i] = menge;
+							}
+
+							// alte Auswahl laden
+							for(i = 0; i < futtermittelliste.length; i++) {
+								$('#auswahl_menge' + i.toString()).val(kuhliste[index].futtermenge[i]).change;
+							}
+
+							felder_aktualisieren();
+
+							// index für nächste Änderung speichern
+							index_vorherige_kuh = index;
+
+							var formelbedEn = Math.round(($('#milch_aktuell').html() * 3.3 + 40)*10)/10	;
+							var formelbedEiw = Math.round(($('#milch_aktuell').html() * 8.8 + 89)*10)/10;
+
+								$('#bedEn').html( formelbedEn );
+								$('#bedEiw').html( formelbedEiw );
+
+						});  // Ende on change Function
+
+
+						$('#auswahl_menge0,#auswahl_menge1,#auswahl_menge2,#auswahl_menge3,#auswahl_menge4').each(function() {
+
+							$(this).on('change', function() {
+
+									felder_aktualisieren();
+							});
+						});
+
+
+
+
+
+						$('button').on('click', function() {
+							event.preventDefault();
+							// TODO: benötigte Gesamtmenge aus den ausgewählten Daten berechnen
+						});
+        			}
+     			});
+
+
+													var target    = 45, // Beginn Canvas Energie
+											        increment = 2;
+											    //
+
+											    // This donut is the background
+											    var donut = new RGraph.Pie({
+											        id: 'cvs',
+											        data: [1],
+											        options: {
+											            variant: 'donut',
+											            colors: ['rgba(0,128,0,0.25)'],
+											            strokestyle: 'rgba(0,0,0,0)'
+											        }
+											    }).draw()
+
+											    var donut = new RGraph.Pie({
+											        id: 'cvs',
+											        data: [target,27],
+											        options: {
+											            variant: 'donut',
+											            colors: ['green','rgba(0,0,0,0)'],
+											            strokestyle: 'rgba(0,0,0,0)',
+											            shadow: false
+											        }
+											    }).on('draw', function (obj)
+											    {
+											        // Update the text object with the value shown on the Donut chart
+											        if (text) {
+											            text.text = parseInt(target * obj.get('effect.roundrobin.multiplier')) + '%';
+											        }
+											    }).roundRobin(null, function ()
+											    {
+											        text.set('textAccessible', true);
+											        RGraph.redraw();
+											    })
+											    var text = new RGraph.Drawing.Text({
+											        id: 'cvs',
+											        x: donut.centerx,
+											        y: donut.centery,
+											        text: '0%',
+											        options: {
+											            size: 15,
+											            halign: 'center',
+											            valign: 'center'
+											        }
+											    }).draw();
+
+													var target2    = 15, // Beginn Canvas Energie
+															increment = 2;
+													//
+
+													// This donut is the background
+													var donut2 = new RGraph.Pie({
+															id: 'cvss',
+															data: [1],
+															options: {
+																	variant: 'donut',
+																	colors: ['rgba(0,128,0,0.25)'],
+																	strokestyle: 'rgba(0,0,0,0)'
+															}
+													}).draw()
+
+													var donut2 = new RGraph.Pie({
+															id: 'cvss',
+															data: [target,27],
+															options: {
+																	variant: 'donut',
+																	colors: ['green','rgba(0,0,0,0)'],
+																	strokestyle: 'rgba(0,0,0,0)',
+																	shadow: false
+															}
+													}).on('draw', function (obj)
+													{
+															// Update the text object with the value shown on the Donut chart
+															if (text) {
+																	text.text = parseInt(target * obj.get('effect.roundrobin.multiplier')) + '%';
+															}
+													}).roundRobin(null, function ()
+													{
+															text.set('textAccessible', true);
+															RGraph.redraw();
+													})
+													var text2 = new RGraph.Drawing.Text({
+															id: 'cvs',
+															x: donut2.centerx,
+															y: donut2.centery,
+															text: '44%',
+															options: {
+																	size: 15,
+																	halign: 'center',
+																	valign: 'center'
+															}
+													}).draw();
+
+
+
+
+			}); // Ende Document ready
+
+		</script>
+
+		<style>
+			#wrapper{ margin: 0.8em;}
+			* { font:1.25 rem Arial; font-family: 'Bitter', serif;}
+			#formular {
+				border: 3px solid #7DB542;
+				width:100%;
+				position: static;
+				padding: 0.8em;
+				margin-bottom: 0.8em;
+			}
+			table { width: 620px; height: 100px}
+			td { width: 200px; height:50px; text-align: center;}
+			#datkuh {width: 200px; height:50px}
+			.inputfm {width: 120px;}
+			#zy { float: right;}
+			#btn { width: 20px; height: 20px;}
+			#canvas1 {
+				float: right;
+			}
+			h2 {font-family: 'Bitter', serif;
+					font-weight: bold;
+					font-size: 40px;}
+
+					h2 { animation:blink infinite steps(35) 10s ; overflow:hidden; white-space:nowrap; width:0%; }
+					@keyframes blink {
+					  0% { width:0;  }
+					  20% { width:100%; }
+					  95% { width:100%; }
+					  100% { width:0; }
+					}
+		</style>
+
+	</head>
+
+	<body>
+		<div id="wrapper">
+		<h2>Futtermittelrechner</h2>
+		<form id="formular">
+			<div id="zy">
+			<table id="kuhdaten">
+				<tr><td>Name</td><td>Ohrmarke</td><td>Milch je Tag</td><td>trächtig</td></tr>
+				<tr><td id="anzeige_kuh"></td><td id="anzeige_ohrmarke"></td><td id="anzeige_milch"></td><td id="anzeige_traechtig"></td></tr>
+			</table>
+			<div id="canvas1"><canvas id="cvs" width="150" height="150">
+				<canvas id="cvss" width="250" height="250">
+			</div>
+		</div>
+			<table class="table-bordered" id="futterdaten"><tr>
+			<td>Menge (kg)</td><td>Futtermittel</td><td>Energie (kJ)</td><td>Fett (g)</td><td>Eiweiß (g)</td><td>Rohfaser (g)</td></tr>
+			<td id="formel"></td><td>Bedarf der Kuh</td><td id="bedEn"></td><td></td><td id="bedEiw"></td><td></td>
+			</tr></table>
+			<div id="berechnung"></div>
+					</form>
+
+		<button type="button" class="btn btn-primary">Ergebnis abspeichern</button>
+
+	</div>
+
+	</body>
+
+</html>
