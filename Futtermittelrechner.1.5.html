@@ -1,0 +1,827 @@
+<!doctype html>
+<html>
+
+	<head>
+		<title>Futtermittelrechner</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<script src="jquery-3.3.1.min.js"></script>
+
+		<link rel="stylesheet" href="jqueryui/jquery-ui.min.css">
+		<link rel="stylesheet" href="jqueryui/jquery-ui.theme.min.css">
+		<script src="jqueryui/jquery-ui.min.js"></script>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+
+		<script src="RGraph/libraries/RGraph.common.core.js"></script>
+		<script src="RGraph/libraries/RGraph.drawing.text.js"></script>
+		<script src="RGraph/libraries/RGraph.pie.js"></script>
+
+		<link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+		<script>
+
+		var graphEnergie = function(target) {
+				target = Math.round( target * 10 ) / 10;
+				increment = 0.5;
+
+ 			RGraph.Clear(document.getElementById('cvsEn'))
+			RGraph.Reset(document.getElementById('cvsEn'))
+
+			var donut = new RGraph.Pie({
+					id: 'cvsEn',
+					data: [1],
+					options: {
+							variant: 'donut',
+							colors: ['#9ccc65'],
+							strokestyle: 'rgba(0,0,0,0)'
+					}
+			}).draw()
+
+			var donut = new RGraph.Pie({
+					id: 'cvsEn',
+					data: [target, target > 100 ? 0 : (100-target)],
+					options: {
+							variant: 'donut',
+							colors: ['green','rgba(0,0,0,0)'],
+							strokestyle: 'rgba(0,0,0,0)',
+							shadow: false
+					}
+			}).on('draw', function (obj)
+			{
+					// Update the text object with the value shown on the Donut chart
+					if (text) {
+						text.text = target + '%';
+							//text.text = parseInt(target * obj.get('effect.roundrobin.multiplier')) + '%';
+					}
+			}).roundRobin(null, function ()
+			{
+					text.set('textAccessible', true);
+					RGraph.redraw();
+			})
+			var text = new RGraph.Drawing.Text({
+					id: 'cvsEn',
+					x: donut.centerx,
+					y: donut.centery,
+					text: '0%',
+					options: {
+							size: 14,
+							halign: 'center',
+							valign: 'center'
+					}
+			}).draw();
+
+		} // ende graphEnergie
+
+		var graphFett = function(target2) {
+
+			target2 = Math.round( target2 * 10 ) / 10;
+			increment = 200;
+			//
+			RGraph.Clear(document.getElementById('cvsEi'))
+			RGraph.Reset(document.getElementById('cvsEi'))
+			// This donut is the background
+			var donut = new RGraph.Pie({
+					id: 'cvsEi',
+					data: [1],
+					options: {
+							variant: 'donut',
+							colors: ['#64b5f6'],
+			//				colors: ['rgba(150,128,0,0.25)'],
+							strokestyle: 'rgba(0,0,0,0)'
+					}
+			}).draw()
+
+			var donut = new RGraph.Pie({
+					id: 'cvsEi',
+					data: [target2, target2 > 100 ? 0 : (100-target2)],
+					options: {
+							variant: 'donut',
+							colors: ['blue','rgba(0,0,0,0)'],
+							strokestyle: 'rgba(0,0,0,0)',
+							shadow: false
+					}
+			}).on('draw', function (obj)
+			{
+					// Update the text object with the value shown on the Donut chart
+					if (text) {
+						text.text = target2 + '%';
+							//text.text = parseInt(target * obj.get('effect.roundrobin.multiplier')) + '%';
+					}
+			}).roundRobin(null, function ()
+			{
+					text.set('textAccessible', true);
+					RGraph.redraw();
+			})
+			var text = new RGraph.Drawing.Text({
+					id: 'cvsEi',
+					x: donut.centerx,
+					y: donut.centery,
+					text: '0%',
+					options: {
+							size: 14,
+							halign: 'center',
+							valign: 'center'
+					}
+			}).draw();
+
+		} // ende graphEiweiss
+
+
+		var graphEiweiss = function(target3) {
+			target3 = Math.round( target3 * 10 ) / 10;
+			increment = 2;
+			//
+ 			RGraph.Clear(document.getElementById('cvsFe'))
+			RGraph.Reset(document.getElementById('cvsFe'))
+			// This donut is the background
+			var donut = new RGraph.Pie({
+					id: 'cvsFe',
+					data: [1],
+					options: {
+							variant: 'donut',
+							colors: ['#ffcc80'],
+		//					colors: ['rgba(0,128,0,0.25)'],
+							strokestyle: 'rgba(0,0,0,0)'
+					}
+			}).draw()
+
+			var donut = new RGraph.Pie({
+					id: 'cvsFe',
+					data: [target3, target3 > 100 ? 0 : (100-target3)],
+					options: {
+							variant: 'donut',
+							colors: ['#ff6f00', 'rgba(0,0,0,0)'],
+							strokestyle: 'rgba(0,0,0,0)',
+							shadow: false
+					}
+			}).on('draw', function (obj)
+			{
+					// Update the text object with the value shown on the Donut chart
+					if (text) {
+						text.text = target3 + '%';
+							//text.text = parseInt(target * obj.get('effect.roundrobin.multiplier')) + '%';
+					}
+			}).roundRobin(null, function ()
+			{
+					text.set('textAccessible', true);
+					RGraph.redraw();
+			})
+			var text = new RGraph.Drawing.Text({
+					id: 'cvsFe',
+					x: donut.centerx,
+					y: donut.centery,
+					text: '0%',
+					options: {
+							size: 14,
+							halign: 'center',
+							valign: 'center'
+					}
+			}).draw();
+
+		} // ende graphFett
+
+		var graphRohfaser = function(target) {
+			target = Math.round( target * 10 ) / 10;
+			increment = 2;
+			//
+			RGraph.Clear(document.getElementById('cvsRo'))
+			RGraph.Reset(document.getElementById('cvsRo'))
+			// This donut is the background
+			var donut = new RGraph.Pie({
+					id: 'cvsRo',
+					data: [1],
+					options: {
+							variant: 'donut',
+							colors: ['#80cbc4'],
+							strokestyle: 'rgba(0,0,0,0)'
+					}
+			}).draw()
+
+			var donut = new RGraph.Pie({
+					id: 'cvsRo',
+					data: [target, target > 100 ? 0 : (100-target)],
+					options: {
+							variant: 'donut',
+							colors: ['#00695c','rgba(0,0,0,0)'],
+							strokestyle: 'rgba(0,0,0,0)',
+							shadow: false
+					}
+			}).on('draw', function (obj)
+			{
+					// Update the text object with the value shown on the Donut chart
+					if (text) {
+						text.text = target + '%';
+							//text.text = parseInt(target * obj.get('effect.roundrobin.multiplier')) + '%';
+					}
+			}).roundRobin(null, function ()
+			{
+					text.set('textAccessible', true);
+					RGraph.redraw();
+			})
+			var text = new RGraph.Drawing.Text({
+					id: 'cvsRo',
+					x: donut.centerx,
+					y: donut.centery,
+					text: '0%',
+					options: {
+							size: 14,
+							halign: 'center',
+							valign: 'center'
+					}
+			}).draw();
+
+		} // ende graphEnergie
+
+
+			var Kuh = function(name, ohrmarke, milch, traechtig, futteranzahl) {
+				this.daten = [];
+				this.futtermenge = [];
+				//this.fertig = 0;
+
+				this.daten[0] = name;
+				this.daten[1] = ohrmarke;
+				this.daten[2] = milch;
+				this.daten[3] = traechtig;
+
+				for(i = 0; i < futteranzahl; i++)
+					this.futtermenge[i] = 0;
+			}
+
+			var Futtermittel = function(name, energie, fett, eiweis, rohfaser) {
+				this.name = name;
+				this.energie = energie;
+				this.fett = fett;
+				this.eiweis = eiweis;
+				this.rohfaser = rohfaser;
+			}
+
+			var futtermittelliste = [];
+			var kuhliste = [];
+			var summe = [0,0,0,0,0];
+			var anz_fertige_kuehe = 0;
+
+			var felder_aktualisieren = function() {
+
+				var neuer_wert_energie;
+				var neuer_wert_fett;
+				var neuer_wert_eiweis;
+				var neuer_wert_rohfaser;
+
+				for(var i = 0; i < futtermittelliste.length; i++) {
+
+					menge = $('#auswahl_menge' + i.toString()).val();
+
+					neuer_wert_energie = menge * futtermittelliste[i].energie;
+					neuer_wert_fett = menge * futtermittelliste[i].fett;
+					neuer_wert_eiweis = menge * futtermittelliste[i].eiweis;
+					neuer_wert_rohfaser = menge * futtermittelliste[i].rohfaser;
+
+					$('#anzeige_energie' + i.toString()).html(neuer_wert_energie).change;
+					$('#anzeige_fett' + i.toString()).html(neuer_wert_fett).change;
+					$('#anzeige_eiweis' + i.toString()).html(neuer_wert_eiweis).change;
+					$('#anzeige_rohfaser' + i.toString()).html(neuer_wert_rohfaser).change;
+
+					// Gesamtmenge aktualisieren
+
+					var sum_energie = 0;
+					var sum_fett = 0;
+					var sum_eiweis = 0;
+					var sum_rohfaser = 0;
+
+					for(var j = 0; j < futtermittelliste.length; j++) {
+
+						var wert_energie_string = $('#anzeige_energie' + j.toString()).html();
+						var wert_energie = wert_energie_string * 1;
+
+						var wert_fett_string = $('#anzeige_fett' + j.toString()).html();
+						var wert_fett = wert_fett_string * 1;
+
+						var wert_eiweis_string = $('#anzeige_eiweis' + j.toString()).html();
+						var wert_eiweis = wert_eiweis_string * 1;
+
+						var wert_rohfaser_string = $('#anzeige_rohfaser' + j.toString()).html();
+						var wert_rohfaser = wert_rohfaser_string * 1;
+
+						sum_energie += wert_energie;
+						sum_fett += wert_fett;
+						sum_eiweis += wert_eiweis;
+						sum_rohfaser += wert_rohfaser;
+
+					}
+
+					$('#sum_energie').html(sum_energie).change;
+					$('#sum_fett').html(sum_fett).change;
+					$('#sum_eiweis').html(sum_eiweis).change;
+					$('#sum_rohfaser').html(sum_rohfaser).change;
+
+				}
+
+				var formelbedEn = Math.round(($('#milch_aktuell').html() * 3.3 + 40)*10)/10	;
+				var formelbedEiw = Math.round(($('#milch_aktuell').html() * 8.8 + 89)*10)/10;
+				var formelbedFe = Math.round(($('#milch_aktuell').html() * 4.4 + 8.9)*10)/10;
+				var formelbedRo = Math.round(($('#milch_aktuell').html() * 2.2 + 4.6)*10)/10;
+
+				graphEnergie(	$('#sum_energie').html()/formelbedEn*100 );
+				graphFett(	$('#sum_fett').html()/formelbedFe*100 );
+				graphEiweiss(	$('#sum_eiweis').html()/formelbedEiw*100 );
+				graphRohfaser(	$('#sum_rohfaser').html()/formelbedRo*100 );
+			}
+
+			var ergebnisSpeichern = function() {
+
+				om = $('#auswahl_kuh').val();
+
+				$( "option:selected" ).each(function() {
+
+					if(om == $(this).val()) {
+						$(this).detach();
+					}
+			});
+
+
+
+				var name;
+				var index;
+				for(var i = 0; i < kuhliste.length; i++) {
+					if(kuhliste[i].daten[1] == om) {
+						name = kuhliste[i].daten[0];
+						index = i;
+					}
+				}
+
+				//alert($('#auswahl_menge0').val());
+
+				//kuhliste[index].fertig = 1;
+
+				$('#ergebnis,#meld').show();
+				//console.log('button geklickt');
+				$('<tr>')
+						.append($('<td>').html(name))
+						.append($('<td>').html(om))
+						.append($('<td>').html($('#auswahl_menge0').val()))
+						.append($('<td>').html($('#auswahl_menge1').val()))
+						.append($('<td>').html($('#auswahl_menge2').val()))
+						.append($('<td>').html($('#auswahl_menge3').val()))
+						.append($('<td>').html($('#auswahl_menge4').val()))
+						.appendTo('#ergfutt');
+
+
+							for(var m = 0; m < futtermittelliste.length; m++) {
+
+						summe[m] += $('#auswahl_menge' + m.toString()).val()*1;
+				//			$('#sum_gras' ).html(summe[m]*1);
+
+					}
+
+			/*		summe[1] += $('#auswahl_menge1').val()*1;
+						summe[2] += $('#auswahl_menge2').val()*1;
+						summe[3] += $('#auswahl_menge3').val()*1;
+						summe[4] += $('#auswahl_menge4').val()*1;    */
+
+						$('#sum_gras' ).html(summe[0]*1);
+						$('#sum_heu' ) .html(summe[1]*1);
+						$('#sum_rub' ) .html(summe[2]*1);
+						$('#sum_mais' ).html(summe[3]*1);
+						$('#sum_getr' ).html(summe[4]*1);
+
+						var ggras = 	$('#sum_gras' ).val();
+						console.log(ggras); //$('#eing').val() ;
+
+						$('#eingtxt').on('change', function(){
+							console.log('wert im input geändert');
+							var eingtage = $('#eingtxt').val()*1;
+							$('#ges_gras' ).html(summe[0]*eingtage);
+							$('#ges_heu' ) .html(summe[1]*eingtage);
+							$('#ges_rub' ) .html(summe[2]*eingtage);
+							$('#ges_mais' ).html(summe[3]*eingtage);
+							$('#ges_getr' ).html(summe[4]*eingtage);
+
+						})
+
+						var eingtage = $('#eingtxt').val()*1;
+						$('#ges_gras' ).html(summe[0]*0);
+						$('#ges_heu' ) .html(summe[1]*1);
+						$('#ges_rub' ) .html(summe[2]*1);
+						$('#ges_mais' ).html(summe[3]*1);
+						$('#ges_getr' ).html(summe[4]*1);
+
+
+
+
+
+
+
+	//			var temp = [];
+	//			temp = kuhliste.slice(0,index).concat( kuhliste.slice(index+1) );
+	//			kuhliste = temp;
+
+	//			$('#auswahl_kuh').remove();
+	//			$('<select class="form-control" id="auswahl_kuh">').appendTo('#anzeige_kuh');
+	//			for (i = 0; i < kuhliste.length; i++) {
+
+		//					($('<option>').val(kuhliste[i].daten[1]).html(kuhliste[i].daten[0]).appendTo('#auswahl_kuh'));
+
+	//			}
+				// to do : kuh änders entfernen
+				// nur diese eine option entfernen
+
+				om = $('#auswahl_kuh').val();
+				var indexalt;
+
+				for(var i = 0; i < kuhliste.length; i++) {
+
+						//alert(om);
+						//alert(kuhliste[i].daten[1]);
+						if(kuhliste[i].daten[1] == om) {
+								indexalt = i;
+								//alert(kuhliste[i].daten[1]);
+
+						}
+				}
+
+				if(anz_fertige_kuehe  < kuhliste.length) {
+					for(i = 0; i < futtermittelliste.length; i++) {
+						$('#auswahl_menge' + i.toString()).val(kuhliste[indexalt].futtermenge[i]).change;
+					}
+				}
+				else {
+					for(i = 0; i < futtermittelliste.length; i++) {
+						$( "#auswahl_menge" + i.toString()).prop( "disabled", true );
+					}
+					$( "#auswahl_kuh").prop( "disabled", true );
+				}
+
+				felder_aktualisieren();
+
+					index_vorherige_kuh = indexalt;
+
+
+			}; //ende funktion ergebnisSpeichern
+
+			var macheAlertDialog = function( text, titel ) {
+				// wenn titel kein Wert dann nimm Standardwert
+				titel = titel || 'Info';
+				$( "#alert-dialog" ).attr('title', titel );
+				$( "#alert-dialog p" ).html( text );
+				$( "#alert-dialog" ).dialog({
+					modal: true,
+					buttons: {
+						Ok: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			}
+			// überschreibe vorhande Funktion alert mit eigener
+			window.alert = macheAlertDialog;
+			//window.alert = console.log;
+
+			$(document).ready(function() {
+
+				$('#ergebnis,#meld').hide();
+
+				graphEnergie(	0 );
+				graphFett( 0 );
+				graphEiweiss( 0 );
+				graphRohfaser( 0 );
+
+
+
+    			$.ajax({
+							method:'GET',
+        			//type: "GET",
+							url: "http://localhost:5000",
+
+        			//url: "Kuhliste.csv",
+        			//dataType: "text",
+        			success: function(data) {
+
+								//alert(data);
+
+						// Futtermittelliste erstellen (im Moment hardcoded, kann man bei Bedarf auch aus File laden)
+						futtermittelliste[0] = new Futtermittel('Gras',10,5,8,13);
+						futtermittelliste[1] = new Futtermittel('Heu',8,15,9,3);
+						futtermittelliste[2] = new Futtermittel('Rüben',13,2,12,8);
+						futtermittelliste[3] = new Futtermittel('Mais',4,17,11,10);
+						futtermittelliste[4] = new Futtermittel('Getreide',19,12,1,5);
+
+        				// Kuhliste aus csv file laden
+        				var zeilen = data.split(/\r\n|\n/);
+        				var daten_zeile;
+    					for (var i = 0; i < zeilen.length - 1; i++) {
+        					daten_zeile = zeilen[i+1].split(';');
+        					kuhliste[i] = new Kuh(daten_zeile[0],daten_zeile[1],daten_zeile[2],daten_zeile[3],futtermittelliste.length);
+    					}
+
+    					var index_vorherige_kuh = 0;
+
+						// Anzeige der Kühe erstellen
+						$('<select class="form-control" id="auswahl_kuh">').appendTo('#anzeige_kuh');
+
+						for (i = 0; i < kuhliste.length; i++)
+					//		var t = kuhliste[i].daten[0];
+						$('<option id="test">').val(kuhliste[i].daten[1]).html(kuhliste[i].daten[0]).appendTo('#auswahl_kuh');
+
+						$('<div id="ohrmarke_aktuell">').html(kuhliste[0].daten[1]).appendTo('#anzeige_ohrmarke');
+						$('<div id="milch_aktuell">').html(kuhliste[0].daten[2]).appendTo('#anzeige_milch');
+						$('<div id="traechtig_aktuell">').html(kuhliste[0].daten[3]).appendTo('#anzeige_traechtig');
+
+						var formelbedEn  = Math.round(($('#milch_aktuell').html() * 3.3 + 40)*10)/10;
+						var formelbedEi  = Math.round(($('#milch_aktuell').html() * 8.8 + 89)*10)/10;
+						var formelbedFe  = Math.round(($('#milch_aktuell').html() * 4.4 + 8.9)*10)/10;
+						var formelbedRo  = Math.round(($('#milch_aktuell').html() * 2.2 + 4.6)*10)/10;
+
+						$('#bedEn' ).html( formelbedEn );
+						$('#bedEi' ).html( formelbedEi );
+						$('#bedFe' ).html( formelbedFe );
+						$('#bedRo' ).html( formelbedRo );
+
+						// Anzeige der Futtermittel erstellen
+						for(i = 0; i < futtermittelliste.length; i++) {
+
+							$('<tr id="tab_zeile' + i.toString() + '">').appendTo('#futterdaten');
+
+							$(' <td id="anzeige_menge'          + i.toString() + '">\
+							    <td id="anzeige_futtermittel'   + i.toString() + '">\
+					  			<td id="anzeige_energie'        + i.toString() + '">\
+					  			<td id="anzeige_fett'           + i.toString() + '">\
+					  			<td id="anzeige_eiweis'         + i.toString() + '">\
+							  	<td id="anzeige_rohfaser'       + i.toString() + '">').each(function(){
+
+									$(this).appendTo('#tab_zeile' + i.toString());
+
+								});
+
+							$('<select class="form-control" id="auswahl_menge' + i.toString() + '">')
+									.appendTo('#anzeige_menge' + i.toString());
+
+							for (j=0; j<=100; j++)
+								($('<option>').val(0.5*j).html(0.5*j).appendTo('#auswahl_menge' + i.toString()));
+
+							$('<div>').html(futtermittelliste[i].name).appendTo('#anzeige_futtermittel' + i.toString());
+
+							$('<div>').html('0').appendTo('#anzeige_energie' + i.toString());
+							$('<div>').html('0').appendTo('#anzeige_fett' + i.toString());
+							$('<div>').html('0').appendTo('#anzeige_eiweis' + i.toString());
+							$('<div>').html('0').appendTo('#anzeige_rohfaser' + i.toString());
+						}
+
+
+						$('<tr id="tab_erg">').appendTo('#futterdaten');
+						$('<td>').appendTo('#tab_erg');
+						$('<td id="sum_ges">').html('Gesamt').appendTo('#tab_erg');
+
+						$('<td id="sum_energie">\
+						   <td id="sum_fett">\
+							 <td id="sum_eiweis">\
+							 <td id="sum_rohfaser">').each(function(){
+
+								$(this).html(0).appendTo('#tab_erg');
+
+						});
+
+						// Event handle für Kuhauswahl
+						$('#auswahl_kuh').on('change', function() {
+
+							om = $('#auswahl_kuh').val();
+							var index;
+
+							for (i=0; i<kuhliste.length; i++) {
+								if(kuhliste[i].daten[1] == om)
+									index = i;
+							}
+
+							//alert(index);
+
+							$('#ohrmarke_aktuell,#milch_aktuell,#traechtig_aktuell').remove();
+							$('<div id="ohrmarke_aktuell">').html(kuhliste[index].daten[1]).appendTo('#anzeige_ohrmarke');
+							$('<div id="milch_aktuell">').html(kuhliste[index].daten[2]).appendTo('#anzeige_milch');
+							$('<div id="traechtig_aktuell">').html(kuhliste[index].daten[3]).appendTo('#anzeige_traechtig');
+
+							// ausgewählte futtermenge für vorherige kuh abspeichern
+							for(i = 0; i < futtermittelliste.length; i++) {
+
+								menge = $('#auswahl_menge' + i.toString()).val();
+								kuhliste[index_vorherige_kuh].futtermenge[i] = menge;
+							}
+
+							// alte Auswahl laden
+							for(i = 0; i < futtermittelliste.length; i++) {
+								$('#auswahl_menge' + i.toString()).val(kuhliste[index].futtermenge[i]).change;
+							}
+
+							felder_aktualisieren();
+
+							// index für nächste Änderung speichern
+							index_vorherige_kuh = index;
+
+							var formelbedEn = Math.round(($('#milch_aktuell').html() * 3.3 + 40)*10)/10	;
+							var formelbedEi = Math.round(($('#milch_aktuell').html() * 8.8 + 89)*10)/10;
+							var formelbedFe = Math.round(($('#milch_aktuell').html() * 4.4 + 8.9)*10)/10;
+							var formelbedRo = Math.round(($('#milch_aktuell').html() * 2.2 + 4.6)*10)/10;
+
+								$('#bedEn' ).html( formelbedEn );
+								$('#bedEi' ).html( formelbedEi );
+								$('#bedFe' ).html( formelbedFe );
+								$('#bedRo' ).html( formelbedRo );
+
+						});  // Ende on change Function
+							$('<input type="text" class="form-control" id="eingtxt" placeholder="Tage eintragen">').appendTo('#tg');
+
+						$('#auswahl_menge0,#auswahl_menge1,#auswahl_menge2,#auswahl_menge3,#auswahl_menge4').each(function() {
+
+							$(this).on('change', function() {
+
+									felder_aktualisieren();
+
+									graphEnergie(	$('#sum_energie').html()/formelbedEn*100 );
+									graphFett(	$('#sum_fett').html()/formelbedFe*100 );
+									graphEiweiss(	$('#sum_eiweis').html()/formelbedEi*100 );
+									graphRohfaser(	$('#sum_rohfaser').html()/formelbedRo*100 );
+
+							});
+						});
+
+				/*		$('#btn').keydown(function(e){
+								if (e.keyCode == 13) {
+									console.log('return gedruckt');
+									alert('hier die meldung');
+									ergebnisSpeichern();
+								}
+						});      */
+
+						$('#btn').on('click', function(event){
+							event.preventDefault();
+							//console.log('button gerade gedruckt');
+							//alert('hier die meldung');
+
+							anz_fertige_kuehe = anz_fertige_kuehe + 1;
+
+							if(anz_fertige_kuehe == kuhliste.length) {
+
+									$( "#btn" ).prop( "disabled", true );
+									alert("Alle Kühe bearbeitet!");
+							}
+
+
+							ergebnisSpeichern();
+
+
+							//alert(anz_fertige_kuehe);
+							//alert(kuhliste.length);
+
+
+
+
+
+						});
+        			}
+     			});   //Ende Ajax Request function
+
+
+			}); // Ende Document ready
+
+		</script>
+
+		<style>
+		* {
+			font-size: 1.7rem;
+			font-family: 'Bitter', serif;
+			}
+			#wrapper{
+			margin: 1.3em;
+			}
+					#formular {
+					border: 4px solid #7DB542;
+					background-color: #eceff1;
+					width:100%;
+					position: static;
+					padding: 0.8em;
+					margin-bottom: 0.8em;
+					float:left;
+				}
+					#futterdaten {
+						border: 2px solid #000;
+						position: static;
+						float: left;
+						width: 620px; height: 100px
+					}
+							#grafik {
+							position: static;
+					/*		top: 25px;
+							right: 1px;
+							width: 750px;*/
+							float: right	;
+							}
+								#kuhdaten { width: 520px; height: 100px}
+
+
+			#ergebnis {
+				padding: 0.8rem;
+				margin: 1.8em;
+				border: 4px solid #7DB542;
+				width:95%;
+			/*	position: static;*/
+			}
+				#sum_gras,#sum_heu,#sum_rub,#sum_mais,#sum_getr   {
+				border-top:1.8px solid #000;
+				border-bottom:3px solid #000;
+			}
+
+			td { /*border: 2px solid #000;*/
+				width: 180px; height:40px; text-align: center;}
+
+			#btn { color: #0404B4; border: 1px solid #000; font-size: 1.6rem; color: #000;}
+
+			#eingtxt { width: 150px; border: 1px solid #000;font-size: 1.5rem; }
+
+
+			#ergfutt td { width: 90px; height: 2px;text-align: center;}
+
+			.table-striped { border: 2px solid black;
+    	background-color: #D8D8D8;
+			}
+
+			.table-bordered { border: 2px solid black;
+    	background-color: #A9BCF5;
+			}
+
+			#sumges,#sumtg { font-size: 1.8rem;}
+
+			#meld { opacity: 1; font-size: 15px;}
+
+			#a, #b, #c, #d { position: relative;top:20px;left:45px}   /*canvas p tags*/
+			#b {left:145px}
+			#c {left:242px}
+			#d {left:345px}
+
+			h2 {font-family: 'Bitter', serif;
+					font-weight: bold;
+					font-size: 55px;}
+
+					h2 { animation:blink infinite steps(35) 10s ; overflow:hidden; white-space:nowrap; width:0%; }
+					@keyframes blink {
+					  0% { width:0;  }
+					  20% { width:100%; }
+					  95% { width:100%; }
+					  100% { width:0; }
+					}
+		</style>
+
+	</head>
+
+	<body>
+		<div id="wrapper">
+		<h2>Futtermittelrechner</h2>
+		<form id="formular">
+
+			<table class="table-bordered" id="futterdaten">
+			<tr>
+			<td>Menge (kg)</td><td>Futtermittel</td><td>Energie (kJ)</td><td>Fett (g)</td><td>Eiweiß (g)</td><td>Rohfaser (g)</td></tr>
+			<td id="formel"></td><td>Bedarf der Kuh</td><td id="bedEn"></td><td id="bedFe"></td><td id="bedEi"></td><td id="bedRo"></td>
+			</tr>
+			</table>
+
+			<div id="grafik">
+
+		  	<table id="kuhdaten">
+				<tr><td>Name</td><td>Ohrmarke</td><td>Milch je Tag</td><td>trächtig</td></tr>
+				<tr><td id="anzeige_kuh"></td><td id="anzeige_ohrmarke"></td><td id="anzeige_milch"></td><td id="anzeige_traechtig"></td></tr>
+				</table><br>
+
+				<p><strong>Deckung Nährstoffbedarf</strong></p>
+				<p><span id="a">Energie</span>
+					 <span id="b">Fett</span>
+					 <span id="c">Eiweis</span>
+					 <span id="d">Rohfaser</span></p>
+
+				<canvas id="cvsEn" width="150" height="150"></canvas>
+				<canvas id="cvsEi" width="150" height="150"></canvas>
+				<canvas id="cvsFe" width="150" height="150"></canvas>
+				<canvas id="cvsRo" width="150" height="150"></canvas>
+
+			</div>
+
+		</form>
+		<button type="button" class="btn btn-primary" id="btn">Ergebnis abspeichern</button>
+	</div>
+																				<!--  Ende Div Wrapper-->
+	<div id="ergebnis">
+			<p><strong>Ergebnis Mengen je Kuh, alle Angaben in kg</strong></p>
+			<table class="table table-striped" id="ergfutt">
+				<tr><td class="eg">Kuh</td><td class="eg">Ohrmarke</td><td class="eg">Gras</td><td class="eg">Heu</td><td class="eg">Rüben</td><td class="eg">Mais</td><td class="eg">Getreide</td></tr>
+				<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			</table>
+			<table class="table table-bordered" id="summemenge">
+				<tr><td id="sumtg">Summe je Tag</td><td></td><td id = "sum_gras"></td><td id = "sum_heu"></td><td id = "sum_rub"></td><td id = "sum_mais"></td><td id = "sum_getr"></td></tr>
+				<tr><td id="sumges">Summe je Zeitraum</td><td id="tg"></td><td id = "ges_gras"></td><td id = "ges_heu"></td><td id = "ges_rub"></td><td id = "ges_mais"></td><td id = "ges_getr"></td></tr>
+			</table>
+	</div>
+	<div id="alert-dialog" title="ERROR">
+		<p id="meld">@</p>
+	</div>
+	</body>
+</html>
