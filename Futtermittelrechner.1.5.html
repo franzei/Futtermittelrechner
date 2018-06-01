@@ -321,7 +321,7 @@
 
 				var formelbedEn = Math.round(($('#milch_aktuell').html() * 3.3 + 40)*10)/10	;
 				var formelbedEiw = Math.round(($('#milch_aktuell').html() * 8.8 + 89)*10)/10;
-				var formelbedFe = Math.round(($('#milch_aktuell').html() * 4.4 + 8.9)*10)/10;
+				var formelbedFe = Math.round(($('#milch_aktuell').html() * 1.2 + 72)*10)/10;
 				var formelbedRo = Math.round(($('#milch_aktuell').html() * 2.2 + 4.6)*10)/10;
 
 				graphEnergie(	$('#sum_energie').html()/formelbedEn*100 );
@@ -502,11 +502,11 @@
 								//alert(data);
 
 						// Futtermittelliste erstellen (im Moment hardcoded, kann man bei Bedarf auch aus File laden)
-						futtermittelliste[0] = new Futtermittel('Gras',10,5,8,13);
-						futtermittelliste[1] = new Futtermittel('Heu',8,15,9,3);
-						futtermittelliste[2] = new Futtermittel('Rüben',13,2,12,8);
-						futtermittelliste[3] = new Futtermittel('Mais',4,17,11,10);
-						futtermittelliste[4] = new Futtermittel('Getreide',19,12,1,5);
+						futtermittelliste[0] = new Futtermittel('Gras',10,8,29,6);
+						futtermittelliste[1] = new Futtermittel('Heu',4,15,15,7);
+						futtermittelliste[2] = new Futtermittel('Rüben',13,8,25,8);
+						futtermittelliste[3] = new Futtermittel('Mais',22,17,42,4);
+						futtermittelliste[4] = new Futtermittel('Getreide',19,14,39,5);
 
         				// Kuhliste aus csv file laden
         				var zeilen = data.split(/\r\n|\n/);
